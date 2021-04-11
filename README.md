@@ -1,4 +1,4 @@
-# Awesome Project Build with TypeORM
+# Express Rest Api Template
 
 Steps to run this project:
 
