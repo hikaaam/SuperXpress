@@ -7,6 +7,7 @@ import {
 } from "./jwt";
 import { guard } from "./auth";
 import { err404, invalidJson } from "./error";
+import logger from "./logger";
 
 export {
   makeJWT,
@@ -17,4 +18,5 @@ export {
   err404,
   clientSecretGenerator,
   invalidJson,
+  logger,
 };

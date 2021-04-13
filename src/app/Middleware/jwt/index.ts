@@ -3,6 +3,9 @@ import * as base64 from "js-base64";
 import * as moment from "moment";
 const dotenv = require("dotenv").config();
 import resp from "../../Response";
+import { getRepository } from "typeorm";
+import { Refresh_token } from "../../../entity/Refresh_token";
+import { hash } from "../../Helper";
 
 const secret_: any = process.env.jwt_secret;
 const duration: string = process.env.jwt_duration_days;
@@ -59,7 +62,7 @@ export const makeRefreshToken = (clientSecret: string) => {
   return `${base64header}.${signature}`;
 };
 
-export const validateRefreshToken = (
+export const validateRefreshToken = async (
   refreshToken: string,
   clientSecret: string
 ) => {
@@ -70,16 +73,37 @@ export const validateRefreshToken = (
     }
     let base64header: string = arr[0];
     let signature: string = arr[1];
+
+    let hashedSecret = hash(clientSecret);
+    let getOne = await getRepository(Refresh_token)
+      .findOne({
+        where: {
+          secret_key: hashedSecret,
+        },
+      })
+      .then((data) => {
+        let user = data.user;
+        return {
+          ...data,
+          user: {
+            ...user,
+          },
+        };
+      });
+    if (getOne.secret_key !== hashedSecret) {
+      return resp(false, "Refresh token is not valid!", null);
+    }
+
     let clientbase64header: string = makeRefreshHeader(clientSecret);
     if (base64header !== clientbase64header) {
       return resp(false, "Refresh token is not valid!", null);
     }
     let clientsignature: string = makeRefreshSignature(clientbase64header);
-    if (signature === clientsignature) {
-      return resp(true, "Refresh token is not valid!", null);
+    if (signature !== clientsignature) {
+      return resp(false, "Refresh token is not valid!", null);
     }
 
-    return resp(false, "Refresh token is not valid!", null);
+    return resp(true, "Refresh token valid!", getOne.user);
   } catch (error) {
     return resp(false, "Refresh token is not valid!", null);
   }

@@ -1,14 +1,17 @@
 // import "reflect-metadata";
-import { getRepository } from "typeorm";
+import { createQueryBuilder, getRepository } from "typeorm";
 import { User } from "../../../entity/User";
+import { Refresh_token } from "../../../entity/Refresh_token";
 import res from "../../Response";
 import {
   makeJWT,
   makeRefreshToken,
   clientSecretGenerator,
+  validateRefreshToken,
 } from "../../Middleware";
 import * as Crypto from "crypto-js";
-import { Length, validate } from "class-validator";
+import { validate } from "class-validator";
+import { hash } from "../../Helper";
 
 class AuthController {
   constructor() {}
@@ -45,15 +48,8 @@ class AuthController {
         if (password != data.password) {
           return res(false, "wrong password", []);
         }
-
-        let jwt: string = makeJWT({ id: data.id, role: data.role });
-        let clientSecret: string = clientSecretGenerator();
-        let refreshToken: string = makeRefreshToken(clientSecret);
-        return res(true, "login success", {
-          token: jwt,
-          clientSecret,
-          refreshToken,
-        });
+        let token = await generateToken(data);
+        return res(true, "login success", token);
       }
       return res(false, "login failed", []);
     } catch (error) {
@@ -72,7 +68,6 @@ class AuthController {
       user.firebase_token = req.firebase_token;
 
       const err: any = await validate(user);
-      console.log(err);
       if (err.length > 0) {
         let props = err[0].property;
         if (props !== "email") {
@@ -92,6 +87,7 @@ class AuthController {
         let jwt: string = makeJWT({ id: getOne.id, role: getOne.role });
         let clientSecret: string = clientSecretGenerator();
         let refreshToken: string = makeRefreshToken(clientSecret);
+
         return res(true, "login success", {
           token: jwt,
           clientSecret,
@@ -99,14 +95,8 @@ class AuthController {
         });
       }
       let data = await getRepository(User).save(user);
-      let jwt: string = makeJWT({ id: data.id, role: data.role });
-      let clientSecret: string = clientSecretGenerator();
-      let refreshToken: string = makeRefreshToken(clientSecret);
-      return res(true, "login success", {
-        token: jwt,
-        clientSecret,
-        refreshToken,
-      });
+      let token = await generateToken(data);
+      return res(true, "login success", token);
     } catch (error) {
       return res(false, error.message, []);
     }
@@ -134,19 +124,40 @@ class AuthController {
       user.firebase_token = req.firebase_token;
 
       const err = await validate(user);
-      console.log(err);
       if (err.length > 0) {
         let msg = getErr(err);
         return res(false, msg, err);
       }
       let data = await getRepository(User).save(user);
-      let jwt: string = makeJWT({ id: data.id, role: data.role });
-      let clientSecret: string = clientSecretGenerator();
-      let refreshToken: string = makeRefreshToken(clientSecret);
-      return res(true, "login success", {
-        token: jwt,
-        clientSecret,
-        refreshToken,
+      let token = await generateToken(data);
+      return res(true, "login success", token);
+    } catch (error) {
+      return res(false, error.message, []);
+    }
+  };
+
+  static refreshToken = async (req: any) => {
+    try {
+      if (req.client_secret == null && req.refresh_token == null) {
+        return res(false, "clientSecret and refreshToken is required", null);
+      }
+
+      let clientSecret = req.client_secret;
+      let refreshToken = req.refresh_token;
+
+      let validation = await validateRefreshToken(refreshToken, clientSecret);
+
+      if (!validation.success) {
+        return validation;
+      }
+
+      let token = makeJWT({
+        id: validation.data.id,
+        role: validation.data.role,
+      });
+
+      return res(true, "here is your new token", {
+        token,
       });
     } catch (error) {
       return res(false, error.message, []);
@@ -170,10 +181,40 @@ const passwordHashing = (password: string, isLogin: boolean = false) => {
   return res(true, "success hashing", Crypto.SHA256(password).toString());
 };
 
-const getErr = (err: any) => {
+const getErr = (err: any): string => {
   let err_: any = Object.values(err[0]);
   let errlength = err_.length - 1;
   let data: any = Object.values(err_[errlength]);
   let msg = data[0];
   return msg;
+};
+
+const generateToken = async (user: User) => {
+  let jwt: string = makeJWT({ id: user.id, role: user.role });
+  let clientSecret: string = clientSecretGenerator();
+  let refreshToken: string = makeRefreshToken(clientSecret);
+  let hashedClient: string = hash(clientSecret);
+  let getOne = await getRepository(Refresh_token).find({
+    where: {
+      user,
+    },
+  });
+
+  if (getOne.length < 1) {
+    getRepository(Refresh_token).save({
+      secret_key: hashedClient,
+      user,
+    });
+  } else {
+    let refresh = new Refresh_token();
+    refresh.user = user;
+    refresh.secret_key = hashedClient;
+    getRepository(Refresh_token).update(getOne[0].id, refresh);
+  }
+
+  return {
+    token: jwt,
+    refreshToken,
+    clientSecret,
+  };
 };

@@ -3,7 +3,7 @@ import * as express from "express";
 const dotenv = require("dotenv");
 dotenv.config();
 
-const isAuth = isAuth_(process.env.use_auth);
+const isAuth: boolean = process.env.use_auth == "true";
 
 export const guard = async (
   req: express.Request,
@@ -36,8 +36,4 @@ export const guard = async (
       .status(401)
       .json({ success: false, msg: "Not Authenticated!", data: [] });
   }
-};
-
-var isAuth_ = (isAuth: string) => {
-  return isAuth == "true";
 };

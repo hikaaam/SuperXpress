@@ -5,7 +5,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const dotenv = require("dotenv");
 dotenv.config();
-import { makeJWT, guard, err404, invalidJson } from "./app/Middleware";
+import { guard, err404, invalidJson, logger } from "./app/Middleware";
 
 createConnection()
   .then(async (connection) => {
@@ -16,6 +16,7 @@ createConnection()
     app.use(express.json());
     app.use(bodyParser.urlencoded({ extended: true }));
     app.use(cors());
+    app.use(logger);
     app.use("/v1", guard);
     app.use(invalidJson);
     app.use("/", router);

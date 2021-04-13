@@ -6,7 +6,6 @@ export const err404 = async (
   res: express.Response,
   next: express.NextFunction
 ) => {
-  console.log(req.route);
   if (!req.route) {
     return res.status(404).json(resp(false, "Route not found", null));
   }

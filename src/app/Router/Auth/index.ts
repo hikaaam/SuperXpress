@@ -52,4 +52,20 @@ AuthRouter.post(
   }
 );
 
+AuthRouter.post(
+  "/auth/refresh_token",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      let resp = await AuthController.refreshToken(req.body);
+      if (!resp.success) {
+        res.status(400).json(resp);
+        return;
+      }
+      res.json(resp);
+    } catch (error) {
+      res.status(500).json(resp(false, error.message, []));
+    }
+  }
+);
+
 module.exports = AuthRouter;
