@@ -12,9 +12,9 @@ createConnection()
     const app = express();
     const router: express.Router = require("./app/Router");
     const PORT = process.env.host;
-
     app.use(express.json());
     app.use(bodyParser.urlencoded({ extended: true }));
+    app.use(express.static(__dirname + "/app/storage/images"));
     app.use(cors());
     app.use(logger);
     app.use("/v1", guard);
