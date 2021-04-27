@@ -1,8 +1,11 @@
 // import "reflect-metadata";
-import { getRepository } from "typeorm";
+import { getRepository, Like } from "typeorm";
 import { User } from "../../../entity/User";
 import res from "../../Response";
 import { NextFunction } from "express";
+import { page } from "../../Validator/Paginator";
+import { paginator } from "../../Helper";
+import resp from "../../Response";
 
 class UserController {
   constructor() {}
@@ -13,6 +16,19 @@ class UserController {
       return res(true, "success", data);
     } catch (error) {
       return res(false, error.message, []);
+    }
+  };
+
+  static paginate = async (page: number) => {
+    try {
+      let data = await paginator({
+        get: 2,
+        page,
+        entity: User,
+      });
+      return resp(true, "success", data);
+    } catch (error) {
+      throw new Error(error.message);
     }
   };
 

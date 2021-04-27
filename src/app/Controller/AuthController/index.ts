@@ -18,14 +18,6 @@ class AuthController {
 
   static loginViaEmail = async (req: any) => {
     try {
-      if (req.email == null) {
-        return res(false, "email is required", []);
-      }
-
-      if (req.password == null) {
-        return res(false, "password is required", []);
-      }
-
       let response = passwordHashing(req.password, true);
 
       if (!response.success) {
@@ -104,18 +96,12 @@ class AuthController {
 
   static register = async (req: any) => {
     try {
-      if (req.email == null) {
-        return res(false, "email is required", []);
-      }
-
       let response = passwordHashing(req.password, true);
 
       if (!response.success) {
         return response;
       }
-
       let password = response.data;
-
       let user = new User();
       user.email = req.email;
       user.password = password;

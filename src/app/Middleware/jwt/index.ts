@@ -75,21 +75,12 @@ export const validateRefreshToken = async (
     let signature: string = arr[1];
 
     let hashedSecret = hash(clientSecret);
-    let getOne = await getRepository(Refresh_token)
-      .findOne({
-        where: {
-          secret_key: hashedSecret,
-        },
-      })
-      .then((data) => {
-        let user = data.user;
-        return {
-          ...data,
-          user: {
-            ...user,
-          },
-        };
-      });
+    let getOne = await getRepository(Refresh_token).findOne({
+      relations: ["user"],
+      where: {
+        secret_key: hashedSecret,
+      },
+    });
     if (getOne.secret_key !== hashedSecret) {
       return resp(false, "Refresh token is not valid!", null);
     }
