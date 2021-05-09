@@ -18,13 +18,7 @@ class AuthController {
 
   static loginViaEmail = async (req: any) => {
     try {
-      let response = passwordHashing(req.password, true);
-
-      if (!response.success) {
-        return response;
-      }
-
-      let password = response.data;
+      let password = hash(req.password);
 
       const data = await getRepository(User)
         .createQueryBuilder()
@@ -96,12 +90,7 @@ class AuthController {
 
   static register = async (req: any) => {
     try {
-      let response = passwordHashing(req.password, true);
-
-      if (!response.success) {
-        return response;
-      }
-      let password = response.data;
+      let password = hash(req.password);
       let user = new User();
       user.email = req.email;
       user.password = password;
@@ -151,21 +140,6 @@ class AuthController {
   };
 }
 export default AuthController;
-
-const passwordHashing = (password: string, isLogin: boolean = false) => {
-  let reg = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
-  let validation = reg.test(password);
-
-  if (!validation) {
-    var msg = "Wrong Password";
-    if (isLogin) {
-      msg = "Password must contain atleast 8 character and a number";
-    }
-    return res(false, msg, []);
-  }
-
-  return res(true, "success hashing", Crypto.SHA256(password).toString());
-};
 
 const getErr = (err: any): string => {
   let err_: any = Object.values(err[0]);
