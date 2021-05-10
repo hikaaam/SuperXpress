@@ -9,14 +9,14 @@ export const LoginViaEmail = passwordJoi.append({
 export const Sosial = joi.object({
   sosial_token: string().required(),
   password: string().required(),
-  name: string().min(10).max(100),
+  name: string().min(10).max(100).required(),
   picture: string().uri(),
   firebase_token: string().required(),
 });
 
 export const RefreshToken = joi.object({
-  clientSecret: string().required(),
-  refreshToken: string().required(),
+  client_secret: string().required(),
+  refresh_token: string().required(),
 });
 
 export const userRegister = passwordJoi.append({

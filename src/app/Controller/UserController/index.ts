@@ -15,7 +15,7 @@ class UserController {
       const data = await getRepository(User).find();
       return res(true, "success", data);
     } catch (error) {
-      return res(false, error.message, []);
+      throw new Error(error.message);
     }
   };
 
@@ -37,7 +37,7 @@ class UserController {
       const data = await getRepository(User).findOneOrFail(id);
       return res(true, "success", data);
     } catch (error) {
-      return res(false, error.message, []);
+      throw new Error(error.message);
     }
   };
 
@@ -47,7 +47,7 @@ class UserController {
       const data = await getRepository(User).save(req);
       return res(true, "success", data);
     } catch (error) {
-      return res(false, error.message, []);
+      throw new Error(error.message);
     }
   };
 
@@ -56,7 +56,7 @@ class UserController {
       const data = await getRepository(User).update(id, req);
       return res(true, "success", data);
     } catch (error) {
-      return res(false, error.message, []);
+      throw new Error(error.message);
     }
   };
 
@@ -65,7 +65,7 @@ class UserController {
       const data = await getRepository(User).delete(id);
       return res(true, "success", data);
     } catch (error) {
-      return res(false, error.message, []);
+      throw new Error(error.message);
     }
   };
 }

@@ -72,7 +72,7 @@ export const paginator = async (obj: paginatorRequest) => {
   let nextPage: number = page >= totalPage ? null : page + 1;
   let prevPage: number = page <= 1 ? null : page - 1;
   let skip: number = get * page - get;
-  let take: number = get * page;
+  let take: number = get;
   const data = await getRepository(entity).find({
     skip,
     take,
