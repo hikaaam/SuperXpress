@@ -5,12 +5,12 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const dotenv = require("dotenv");
 dotenv.config();
-import { guard, err404, invalidJson, logger } from "./app/Middleware";
+import { guard, err404, invalidJson, logger } from "./App/Middleware";
 
 createConnection()
   .then(async (connection) => {
     const app = express();
-    const router: express.Router = require("./app/Router");
+    const router: express.Router = require("./App/Router");
     const PORT = process.env.host;
     app.use(express.json());
     app.use(bodyParser.urlencoded({ extended: true }));
