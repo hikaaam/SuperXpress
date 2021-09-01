@@ -5,7 +5,7 @@ import { Err } from "../../Response";
 import { LoginViaEmail, RefreshToken, Sosial } from "../../Validator/Auth";
 import { userFillable } from "../../Validator/User";
 import { Validator } from '../../../Vendor';
-const { joi, validate } = Validator;
+const { validate } = Validator;
 
 AuthRouter.post(
   "/auth/login",
