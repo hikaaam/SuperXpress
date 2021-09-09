@@ -1,5 +1,5 @@
 host=4242
-
 jwt_secret=jwt_secret
 jwt_duration_days=14
 use_auth=true
+graphql_auth=true

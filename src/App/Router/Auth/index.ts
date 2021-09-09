@@ -2,8 +2,8 @@ import { Router, Request, Response, NextFunction } from "express";
 import controller from "../../Controllers/AuthController";
 const AuthRouter: Router = Router();
 import { Err } from "../../Response";
-import { LoginViaEmail, RefreshToken, Sosial } from "../../Validator/Auth";
-import { userFillable } from "../../Validator/User";
+import { LoginViaEmail, RefreshToken, Sosial } from "../../RestValidator/Auth";
+import { userFillable } from "../../RestValidator/User";
 import { Validator } from '../../../Vendor';
 const { validate } = Validator;
 

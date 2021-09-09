@@ -5,10 +5,10 @@ import { Router, Request, Response, NextFunction } from "express";
 import controller from "../../Controllers/${name}Controller";
 import { Validator } from '../../../Vendor';
 const { joiID, validate } = Validator;
-import paginator from "../../Validator/Paginator";
+import paginator from "../Validator/Paginator";
 import { Err } from "../../Response";
 import { ${name}Fillable } from "../../Validator/${name}";
-import search from "../../Validator/Search";
+import search from "../Validator/Search";
 
 const ${routename}Router: Router = Router();
 

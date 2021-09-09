@@ -1,7 +1,7 @@
 import { getRepository } from "typeorm";
 import { User } from "../../Entity/User";
 import res from "../Response";
-import { IuserFillable } from "../Validator/User";
+import { IuserFillable } from "../RestValidator/User";
 import { Paginate, _id } from '../../Vendor'
 import resp from "../Response";
 

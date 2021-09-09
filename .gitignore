@@ -5,4 +5,4 @@ build/
 tmp/
 temp/
 .env
-/src/storage/
+/Src/storage/

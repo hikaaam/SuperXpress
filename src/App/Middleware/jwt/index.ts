@@ -2,7 +2,8 @@ import {Crypt} from '../../../Vendor'
 import * as Crypto from "crypto-js";
 import * as base64 from "js-base64";
 import * as moment from "moment";
-const dotenv = require("dotenv").config();
+const dotenv = require("dotenv");
+dotenv.config();
 import resp from "../../Response";
 import { getRepository } from "typeorm";
 import { Refresh_token } from "../../../Entity/Refresh_token";
@@ -11,7 +12,6 @@ import { Refresh_token } from "../../../Entity/Refresh_token";
 const secret_: any = process.env.jwt_secret;
 const duration: string = process.env.jwt_duration_days;
 const secret: string = Crypto.SHA256(secret_).toString();
-
 export const makeJWT = (payload: Object) => {
   let header: object = { alg: "SSE2+HS256", typ: "JWT" };
   let base64header: string = base64.encodeURI(JSON.stringify(header));
@@ -22,7 +22,10 @@ export const makeJWT = (payload: Object) => {
   ).toString();
   return `${base64header}.${base64payload}.${signature}`;
 };
+
 export const validateJWT = (jwt: string) => {
+  const useauth = process?.env?.use_auth ?? "true";
+  if(useauth=="false") return resp(true,"backend deactivate their auth",null)
   let arr = jwt.split(".");
   if (arr.length !== 3) {
     return resp(false, "Token is not valid", null);

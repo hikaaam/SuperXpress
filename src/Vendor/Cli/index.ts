@@ -3,7 +3,8 @@ import * as prompt from "prompt";
 import { generateController } from './ControllerTemplate';
 import { generateRouter } from './RouterTemplate';
 import { generateValidator } from './ValidatorTemplate';
-import { generateEntity } from './EntityTemplate'
+import { generateEntity } from './EntityTemplate';
+import { generateGraphqlRouter } from './GraphqlTemplate'
 
 console.log("\x1b[34m", "what do you want to make ?");
 console.log(
@@ -22,6 +23,7 @@ const main = () => {
                 break;
             case "e":
                 getPrompt("entity", createEntity);
+                getPrompt("graphql", createGraphql);
                 break;
             case "c":
                 getPrompt("controller", createController);
@@ -94,6 +96,18 @@ const createRouter = (name) => {
     });
 };
 
+const createGraphql = (name) => {
+    console.log("\x1b[32m", `\ncreating router. . .`);
+    fs.mkdirSync(`src/App/GraphqlRouter/${name}Resolver`);
+    const fileName = `src/App/GraphqlRouter/${name}/index.ts`;
+    fs.appendFile(fileName, generateGraphqlRouter(name), (error) => {
+        if (error) return printErr(error.message);
+        console.log("\x1b[32m", `\nGraphqlResolver created at ${fileName}`);
+        console.log("\x1b[1m", `\ndon't forget to use your GraphqlResolver at src/App/GraphqlRouter/index.ts !!`);
+
+    });
+};
+
 const createValidator = (name) => {
     console.log("\x1b[32m", `\ncreating router. . .`);
     fs.mkdirSync(`src/App/Validator/${name}`);
@@ -115,6 +129,7 @@ const createEntity = (name) => {
 
 const createAll = (name) => {
     createEntity(name);
+    createGraphql(name);
     createValidator(name);
     createController(name);
     createRouter(name);
@@ -125,6 +140,7 @@ const makeFolder = (make) => {
         if (make == "all") {
             try {
                 fs.mkdirSync("src/Entity");
+                fs.mkdirSync("src/App/GraphqlRouter");
             } catch (error) { }
             try {
                 fs.mkdirSync("src/App/Controllers");
@@ -135,9 +151,15 @@ const makeFolder = (make) => {
             try {
                 fs.mkdirSync("src/App/Validator");
             } catch (error) { }
+            try {
+                fs.mkdirSync("src/App/GraphqlRouter");
+            } catch (error) { }
             return;
         }
         let folderName = "src/entity";
+        if (make == "entity") {
+            fs.mkdirSync("src/App/GraphqlRouter");
+        }
         if (make == "controller") folderName = "src/App/Controllers";
         else if (make == "router") folderName = "src/App/Router";
         else if (make == "validator") folderName = "src/App/Validator";

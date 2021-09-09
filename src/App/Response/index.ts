@@ -1,5 +1,10 @@
 import { response } from "express";
-const resp = (scs: boolean, msg: string, data: any) => {
+export interface IRes {
+  success: boolean;
+  msg: string;
+  data: any
+}
+const resp = (scs: boolean, msg: string, data: any): IRes => {
   // data = data ?? [];
   if (scs) {
     return {

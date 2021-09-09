@@ -2,9 +2,9 @@ import { Router, Request, Response, NextFunction } from "express";
 import controller from "../../Controllers/UserController";
 import { Validator } from '../../../Vendor';
 const { joiID, validate } = Validator;
-import paginator from "../../Validator/Paginator";
+import paginator from "../../RestValidator/Paginator";
 import { Err } from "../../Response";
-import { userFillable } from "../../Validator/User";
+import { userFillable } from "../../RestValidator/User";
 
 const userRouter: Router = Router();
 

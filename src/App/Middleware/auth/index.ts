@@ -13,24 +13,25 @@ export const guard = async (
   try {
     if (!isAuth) {
       next();
+    } else {
+      if (!req.headers.authorization) {
+        return res
+          .status(401)
+          .json({ success: false, msg: "No Authorization Header!", data: [] });
+      }
+      let arr = req.headers.authorization.split(" ");
+      if (arr.length !== 2) {
+        return res
+          .status(401)
+          .json({ success: false, msg: "Bearer not valid!", data: [] });
+      }
+      let jwt: string = arr[1];
+      let response = await validateJWT(jwt);
+      if (!response.success) {
+        return res.status(401).json(response);
+      }
+      next();
     }
-    if (!req.headers.authorization) {
-      return res
-        .status(401)
-        .json({ success: false, msg: "No Authorization Header!", data: [] });
-    }
-    let arr = req.headers.authorization.split(" ");
-    if (arr.length !== 2) {
-      return res
-        .status(401)
-        .json({ success: false, msg: "Bearer not valid!", data: [] });
-    }
-    let jwt: string = arr[1];
-    let response = await validateJWT(jwt);
-    if (!response.success) {
-      return res.status(401).json(response);
-    }
-    next();
   } catch (error) {
     return res
       .status(401)
