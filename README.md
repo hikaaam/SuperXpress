@@ -2,7 +2,7 @@
 
 This template provide you a ready to use express REST APIs and Graphql.
 
-##Features
+## Features
 
 - ##### Graphql
 - ##### Rest APIs
