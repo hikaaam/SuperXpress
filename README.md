@@ -127,7 +127,7 @@ User.findOne(1);
 //is the same as SELECT * FROM USER WHERE id = 1;
 ```
 
-Other usecase you can find the example on [Typeorm Docs]('https://typeorm.io')
+Other usecase you can find the example on [Typeorm Docs](https://typeorm.io)
 
 ### Relations
 
@@ -214,4 +214,4 @@ books(@Root() user: User) {
 
 field
 
-for other example on relation you can find it on [Typeorm/Relations]('https://typeorm.io/#/relations')
+for other example on relation you can find it on [Typeorm/Relations](https://typeorm.io/#/relations)
