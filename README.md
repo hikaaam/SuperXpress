@@ -17,7 +17,7 @@ This template provide you a ready to use express REST APIs and Graphql.
 
 Steps to run this project:
 
-1. git clone https://github.com/hikaaam/SuperXpress.git
+1. run `git clone https://github.com/hikaaam/SuperXpress.git`
 2. Run `yarn install` command
 3. Setup database settings inside `ormconfig.json` file
 4. Copy .envexample to .env
