@@ -9,7 +9,9 @@ const uploadRouter: Router = require("./Upload");
 
 
 router.get("/", (req: Request, res: Response) => {
-  res.send("hello world");
+  res.json({
+    msg: "welcome"
+  });
 });
 router.use("/", authRouter);
 router.use("/", uploadRouter);
