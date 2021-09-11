@@ -215,3 +215,14 @@ books(@Root() user: User) {
 field
 
 for other example on relation you can find it on [Typeorm/Relations](https://typeorm.io/#/relations)
+
+## Others
+```typescript
+import {Crypt} from '../../../Vendor';
+
+//a hash function (sha256)
+const hashedText = Crypt.hash('plaintext');
+//an encrypt functions (AES)
+const encryptedText = Crypt.encrypt('plaintext','yoursuperstrongkey');
+const decryptedText = Crypt.decrypt('plaintext','yoursuperstrongkey');
+```
