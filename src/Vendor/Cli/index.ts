@@ -99,7 +99,7 @@ const createRouter = (name) => {
 const createGraphql = (name) => {
     console.log("\x1b[32m", `\ncreating router. . .`);
     fs.mkdirSync(`src/App/GraphqlRouter/${name}Resolver`);
-    const fileName = `src/App/GraphqlRouter/${name}/index.ts`;
+    const fileName = `src/App/GraphqlRouter/${name}Resolver/index.ts`;
     fs.appendFile(fileName, generateGraphqlRouter(name), (error) => {
         if (error) return printErr(error.message);
         console.log("\x1b[32m", `\nGraphqlResolver created at ${fileName}`);
@@ -110,8 +110,8 @@ const createGraphql = (name) => {
 
 const createValidator = (name) => {
     console.log("\x1b[32m", `\ncreating router. . .`);
-    fs.mkdirSync(`src/App/Validator/${name}`);
-    const fileName = `src/App/Validator/${name}/index.ts`;
+    fs.mkdirSync(`src/App/RestValidator/${name}`);
+    const fileName = `src/App/RestValidator/${name}/index.ts`;
     fs.appendFile(fileName, generateValidator(name), (error) => {
         if (error) return printErr(error.message);
         console.log("\x1b[32m", `\nValidator created at ${fileName}`);
@@ -149,7 +149,7 @@ const makeFolder = (make) => {
                 fs.mkdirSync("src/App/Router");
             } catch (error) { }
             try {
-                fs.mkdirSync("src/App/Validator");
+                fs.mkdirSync("src/App/RestValidator");
             } catch (error) { }
             try {
                 fs.mkdirSync("src/App/GraphqlRouter");
