@@ -32,7 +32,7 @@ UploadRouter.post(
   }
 );
 
-const filename = `${clientSecretGenerator()}${clientSecretGenerator()}${moment()}`;
+const filename = `${clientSecretGenerator()}${clientSecretGenerator()}${moment().unix()}`;
 
 const upload = multer({
   limits: {
