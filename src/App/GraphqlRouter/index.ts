@@ -14,6 +14,7 @@ export default buildSchema({
         // and check his permission in the db against the `roles` argument
         // that comes from the `@Authorized` decorator, eg. ["ADMIN", "MODERATOR"]
         const jwtToken = context.authorization;
+        if(jwtToken == null) throw new Error("No Authorization Header!!");
         const { success } = validateJWT(jwtToken);
         return success; //return true if authorized and return false if not
     }
