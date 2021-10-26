@@ -102,7 +102,6 @@ async (req: Request, res: Response, next: NextFunction) => {
   try {
     validate(joiID, req.params);
     const { id } = req.params;
-    validate(${name}Fillable, req.body);
     const { body } = req;
     let resp: Object = await controller.delete(id, body);
     res.json(resp);
