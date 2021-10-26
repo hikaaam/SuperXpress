@@ -4,7 +4,7 @@ import {  Like } from "typeorm";
 import { ${name} } from "../../Entity/${name}";
 import res from "../Response";
 import { Paginate, _id } from '../../Vendor'
-import { I${name}Fillable } from '../Validator/${name}';
+import { I${name}Fillable } from '../RestValidator/${name}';
 
 class ${name}Controller {
     constructor() { }
